@@ -1,7 +1,7 @@
 package messager.client;
 
 
-import messager.server.saveMessage.ServerService;
+import messager.server.ServerService;
 
 public class ClientService {
     private ServerService server;

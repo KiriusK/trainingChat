@@ -1,9 +1,7 @@
 package messager;
 
 import messager.client.ClientService;
-import messager.client.ClientWindow;
-import messager.server.ServerWindow;
-import messager.server.saveMessage.ServerService;
+import messager.server.ServerService;
 
 public class Main {
     public static void main(String[] args) {

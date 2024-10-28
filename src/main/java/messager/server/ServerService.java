@@ -1,8 +1,7 @@
-package messager.server.saveMessage;
+package messager.server;
 
 import messager.client.ClientService;
-import messager.server.ServerView;
-import messager.server.ServerWindow;
+import messager.server.saveMessage.FileMessageStorage;
 
 import java.util.ArrayList;
 import java.util.List;
