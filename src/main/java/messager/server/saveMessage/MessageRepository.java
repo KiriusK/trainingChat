@@ -1,6 +1,6 @@
 package messager.server.saveMessage;
 
-public interface MessageSaveable {
+public interface MessageRepository {
     boolean saveMessages(String messages);
     String loadMessages();
 }

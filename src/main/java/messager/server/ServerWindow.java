@@ -1,27 +1,25 @@
 package messager.server;
 
-import messager.server.saveMessage.SaveMesToFile;
+import messager.server.saveMessage.FileMessageStorage;
+import messager.server.saveMessage.ServerService;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.FileNameMap;
+import java.awt.event.WindowEvent;
 
-public class ServerWindow extends JFrame {
+public class ServerWindow extends JFrame implements ServerView{
     private static final int WIDTH = 400;
     private static final int HEIGHT = 300;
-    private boolean isServerWorking;
     private final JButton start, stop;
     private final JTextArea textOut;
-    private StringBuilder log;
-    private SaveMesToFile fileMessages;
+    private ServerService service;
 
 
-    public ServerWindow() throws HeadlessException {
-        isServerWorking = false;
-        log = new StringBuilder();
-        fileMessages = new SaveMesToFile("server.log");
+
+    public ServerWindow(ServerService service) throws HeadlessException {
+        this.service = service;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(WIDTH, HEIGHT);
         setResizable(false);
@@ -32,14 +30,14 @@ public class ServerWindow extends JFrame {
         start.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                startServer();
+                service.startServer();
             }
         });
         stop = new JButton("Stop");
         stop.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                stopServer();
+                service.stopServer();
             }
         });
     JPanel jp = new JPanel(new GridLayout(1, 2));
@@ -53,52 +51,18 @@ public class ServerWindow extends JFrame {
     setVisible(true);
     }
 
-    private void stopServer() {
-        if (!isServerWorking) {
-            printMes("Server already stopped!");
-            return;
-        }
-        isServerWorking = false;
-        try {
-            printMes("Server is stopping!");
-            fileMessages.saveMessages(log.toString());
-        } catch (RuntimeException ex) {
-            printMes(ex.getMessage());
-        }
-    }
 
-    private void startServer() {
-        if (isServerWorking) {
-            printMes("Server already runned!");
-            return;
-        }
-        isServerWorking = true;
-        try {
-            printMes("Server is running!");
-            log = new StringBuilder(fileMessages.loadMessages());
-        } catch (RuntimeException ex) {
-            printMes(ex.getMessage());
-        }
-    }
 
-    private void printMes(String mes) {
+    public void printMes(String mes) {
         textOut.append(mes);
         textOut.append("\n");
     }
 
-    public boolean isServerWork() {
-        return isServerWorking;
+    protected void processWindowEvent(WindowEvent e) {
+        super.processWindowEvent(e);
+        if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+            service.disconnectAllClients();
+        }
     }
 
-    public boolean createLogRec(String name, String mes) {
-        log.append(name);
-        log.append(": ");
-        log.append(mes);
-        log.append("\n");
-        return true;
-    }
-
-    public String getLog() {
-        return log.toString();
-    }
 }

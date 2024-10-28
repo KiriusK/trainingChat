@@ -1,16 +1,14 @@
 package messager.server.saveMessage;
 
-import java.awt.datatransfer.StringSelection;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class SaveMesToFile implements MessageSaveable{
+public class FileMessageStorage implements MessageRepository {
     private final String fileName;
 
-    public SaveMesToFile(String fileName) {
+    public FileMessageStorage(String fileName) {
         this.fileName = fileName;
     }
 
